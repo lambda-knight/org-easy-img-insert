@@ -20,6 +20,11 @@
 
 (require 'subr-x)
 
+;;(defvar *org-easy-img-res-dir* "Resources/")
+(defvar *org-easy-img-res-dir* "img/")
+
+(defvar *org-easy-img-res-dir-file-prefix* nil)
+
 (defun org-easy-img--extract-file-format (img-link)
   "Return the file format for a given web image link (IMG-LINK)."
   (when (string-match (concat "\\." (regexp-opt image-file-name-extensions)) img-link)
@@ -27,27 +32,32 @@
 
 (defun org-easy-img--get-current-raw-file-name ()
   "Remove the file extension from the currently opened file and it's directory leaving just its raw file name."
-  (let* ((current-file-name (buffer-file-name))
-         (current-file-ext (concat "." (file-name-extension current-file-name)))
-         (current-file-dir (file-name-directory current-file-name))
-         (current-raw-file-name (string-remove-prefix current-file-dir current-file-name))
-         (current-raw-file-name (string-remove-suffix current-file-ext current-raw-file-name))
-         )
-    current-raw-file-name
-    )
+  (if *org-easy-img-res-dir-file-prefix*
+      (let* ((current-file-name (buffer-file-name))
+             (current-file-ext (concat "." (file-name-extension current-file-name)))
+             (current-file-dir (file-name-directory current-file-name))
+             (current-raw-file-name (string-remove-prefix current-file-dir current-file-name))
+             (current-raw-file-name (string-remove-suffix current-file-ext current-raw-file-name))
+             )
+        current-raw-file-name)
+    ""
+    )  
   )
+
 
 (defun org-easy-img--create-img-res-dir ()
   "Create the resource directory for the web image to be downloaded to."
   (let* ((current-file-name (buffer-file-name))
          (current-dir (file-name-directory current-file-name))
-         (img-res-dir (concat  current-dir "Resources/"))
+         ;;(img-res-dir (concat  current-dir "Resources/"))
+         (img-res-dir (concat  current-dir *org-easy-img-res-dir*))
          )
 
     (unless (file-exists-p img-res-dir)
       (make-directory img-res-dir))
 
     (let ((img-res-dir (concat img-res-dir (org-easy-img--get-current-raw-file-name) "/")))
+      
       (unless (file-exists-p img-res-dir)
         (make-directory img-res-dir))
       img-res-dir)
