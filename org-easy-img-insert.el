@@ -20,10 +20,9 @@
 
 (require 'subr-x)
 
-;;(defvar *org-easy-img-res-dir* "Resources/")
-(defvar *org-easy-img-res-dir* "img/")
+(defvar *org-easy-img-res-dir* "Resources/")
 
-(defvar *org-easy-img-res-dir-file-prefix* nil)
+(defvar *org-easy-img-res-dir-file-prefix* t)
 
 (defun org-easy-img--extract-file-format (img-link)
   "Return the file format for a given web image link (IMG-LINK)."
