@@ -82,6 +82,19 @@
                      "-O" img-local-file-loc)
       (org-easy-img--embed-img-at-cursor img-name img-caption img-local-file-loc))))
 
+
+(defun org-easy-img-capture (img-name img-caption)
+  "Automatically embed web image (IMG-LINK) with a name (IMG-NAME) and an optional caption (IMG-CAPTION) at cursor position in 'org-mode'."
+  (interactive "MImage name: \nMImage caption (optional): ")
+
+  (let ((img-type ".png"))
+    (let ((img-local-file-loc (org-easy-img--get-local-img-file-loc img-name img-type)))
+      (start-process "img-capture"
+                     (get-buffer-create "*org-easy-img-capture*")
+                     "gnome-screenshot" "-a" "-f" img-local-file-loc)
+      (org-easy-img--embed-img-at-cursor img-name img-caption img-local-file-loc))))
+
+
 (defun org-easy-img--embed-img-at-cursor (img-name img-caption img-local-file-loc)
   "Function that actually embeds image data at current cursor position.  Takes (IMG-NAME),(IMG-CAPTION),(IMG-LOCAL-FILE-LOC) as args."
   (unless (string= "" img-caption)
